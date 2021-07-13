@@ -9,15 +9,13 @@
          The version stands the same for all modules which will guarantee
          that modules depending on others will always be updated on update of others
                                                                                      -->
-    <version>0.1.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <modules>
         <module>mc-unit</module>
-        <module>commons</module>
-        <module>nms</module>
-        <module>scheduler</module>
-        <module>player</module>
-        <module>config</module>
-        <module>fake-entity</module>
+        <module>minecraft-commons</module>
+        <module>ez-config</module>
+        <module>fake-entity-lib</module>
+        <module>lib-loader</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -55,141 +53,84 @@
     </developers>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <!-- AspectJ-->
-        <aspectj.source.version>${maven.compiler.target}</aspectj.source.version>
-        <aspectj.target.version>${maven.compiler.source}</aspectj.target.version>
-        <aspectj.compliance.version>${maven.compiler.target}</aspectj.compliance.version>
-        <aspectj.version>1.9.2</aspectj.version>
-        <!-- JUnit -->
-        <version.junit>5.3.2</version.junit>
-        <version.junit.platform>1.3.2</version.junit.platform>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Versions -->
+        <version.minecraft-utils>1.0.0-SNAPSHOT</version.minecraft-utils>
+        <version.padla>1.0.0-SNAPSHOT</version.padla>
+        <version.junit>5.7.2</version.junit>
+        <version.junit.platform>1.7.2</version.junit.platform>
+        <version.mockito>3.11.2</version.mockito>
     </properties>
 
-    <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
-
     <repositories>
-        <!-- Sonatype Repository of Snapshots-->
         <repository>
-            <id>sonatype-snapshot-repo</id>
+            <id>sonatype-ossrh</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
-        <!-- Spigot repository -->
         <repository>
-            <id>spigotmc-repo</id>
+            <id>minecraft-libraries</id>
+            <url>https://libraries.minecraft.net/</url>
+        </repository>
+        <repository>
+            <id>spigotmc</id>
             <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
         </repository>
-        <!-- Dmulloy2 repo -->
         <repository>
-            <id>dmulloy2-repo</id>
-            <url>http://repo.dmulloy2.net/nexus/repository/public/</url>
+            <id>dmulloy2</id>
+            <url>https://repo.dmulloy2.net/nexus/repository/public/</url>
         </repository>
     </repositories>
 
     <build>
-        <defaultGoal>clean verify</defaultGoal>
-
         <pluginManagement>
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.0.0-M2</version>
-                    <configuration>
-                        <forkCount>0</forkCount>
-                        <reuseForks>true</reuseForks>
-                    </configuration>
+                    <version>3.0.0-M5</version>
                 </plugin>
 
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>aspectj-maven-plugin</artifactId>
-                    <version>1.11</version>
-
-                    <configuration>
-                        <complianceLevel>${aspectj.compliance.version}</complianceLevel>
-                        <source>${aspectj.source.version}</source>
-                        <target>${aspectj.target.version}</target>
-                        <showWeaveInfo>true</showWeaveInfo>
-                        <verbose>true</verbose>
-                        <Xlint>ignore</Xlint>
-                        <encoding>${project.build.sourceEncoding}</encoding>
-                        <excludes>
-                            <exclude>**/*.java</exclude>
-                        </excludes>
-                        <forceAjcCompile>true</forceAjcCompile>
-                        <sources/>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>default-compile</id>
-                            <phase>process-classes</phase>
-                            <goals>
-                                <goal>compile</goal>
-                            </goals>
-                            <configuration>
-                                <weaveDirectories>
-                                    <weaveDirectory>${project.build.directory}/classes</weaveDirectory>
-                                </weaveDirectories>
-                            </configuration>
-                        </execution>
-                        <execution>
-                            <id>default-testCompile</id>
-                            <phase>process-test-classes</phase>
-                            <goals>
-                                <goal>test-compile</goal>
-                            </goals>
-                            <configuration>
-                                <weaveDirectories>
-                                    <weaveDirectory>${project.build.directory}/test-classes</weaveDirectory>
-                                </weaveDirectories>
-                            </configuration>
-                        </execution>
-                    </executions>
-                    <dependencies>
-                        <dependency>
-                            <groupId>org.aspectj</groupId>
-                            <artifactId>aspectjtools</artifactId>
-                            <version>${aspectj.version}</version>
-                        </dependency>
-                    </dependencies>
-                </plugin>
-
-                <!-- Maven Central integration -->
-                <plugin>
-                    <groupId>org.sonatype.plugins</groupId>
-                    <artifactId>nexus-staging-maven-plugin</artifactId>
-                    <version>1.6.8</version>
-                    <configuration>
-                        <serverId>ossrh</serverId>
-                        <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                        <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                    </configuration>
-                </plugin>
+                <!-- Maven-central deployment-related plugins -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-gpg-plugin</artifactId>
-                    <version>1.6</version>
+                    <version>3.0.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>3.0.1</version>
+                    <version>3.2.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.0.1</version>
+                    <version>3.3.0</version>
                     <configuration>
-                        <doclint>none</doclint>
+                        <tags>
+                            <tag>
+                                <name>apiNote</name>
+                                <placement>a</placement>
+                                <head>API note</head>
+                            </tag>
+                            <tag>
+                                <name>implNote</name>
+                                <placement>a</placement>
+                                <head>Implementation note</head>
+                            </tag>
+                            <tag>
+                                <name>implSpec</name>
+                                <placement>a</placement>
+                                <head>Implementation specification</head>
+                            </tag>
+                        </tags>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.sonatype.plugins</groupId>
+                    <artifactId>nexus-staging-maven-plugin</artifactId>
+                    <version>1.6.8</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -199,93 +140,116 @@
         <dependencies>
             <!-- Local elements -->
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>ru.progrm-jarvis.minecraft</groupId>
                 <artifactId>mc-unit</artifactId>
-                <version>${project.version}</version>
+                <version>${version.minecraft-utils}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>ru.progrm-jarvis.minecraft</groupId>
                 <artifactId>minecraft-commons</artifactId>
-                <version>${project.version}</version>
+                <version>${version.minecraft-utils}</version>
             </dependency>
             <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>nms-utils</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>scheduler-utils</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>player-utils</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>ru.progrm-jarvis.minecraft</groupId>
                 <artifactId>ez-cfg</artifactId>
-                <version>${project.version}</version>
+                <version>${version.minecraft-utils}</version>
             </dependency>
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>ru.progrm-jarvis.minecraft</groupId>
                 <artifactId>fake-entity-lib</artifactId>
-                <version>${project.version}</version>
+                <version>${version.minecraft-utils}</version>
+            </dependency>
+            <dependency>
+                <groupId>ru.progrm-jarvis.minecraft</groupId>
+                <artifactId>lib-loader</artifactId>
+                <version>${version.minecraft-utils}</version>
+            </dependency>
+
+            <!-- Hamcrest should be above any possible JUnit dependencies -->
+            <dependency>
+                <groupId>org.hamcrest</groupId>
+                <artifactId>hamcrest-all</artifactId>
+                <version>1.3</version>
+                <scope>test</scope>
             </dependency>
 
             <!-- Main dependencies -->
             <dependency>
+                <groupId>ru.progrm-jarvis</groupId>
+                <artifactId>java-commons</artifactId>
+                <version>${version.padla}</version>
+            </dependency>
+            <dependency>
+                <groupId>ru.progrm-jarvis</groupId>
+                <artifactId>reflector</artifactId>
+                <version>${version.padla}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.spigotmc</groupId>
                 <artifactId>spigot-api</artifactId>
-                <version>1.13.1-R0.1-SNAPSHOT</version>
+                <version>1.16.1-R0.1-SNAPSHOT</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>net.md-5</groupId>
                 <artifactId>bungeecord-api</artifactId>
-                <version>1.13-SNAPSHOT</version>
+                <version>1.16-R0.4</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>com.comphenix.protocol</groupId>
-                <artifactId>ProtocolLib-API</artifactId>
-                <version>4.4.0</version>
+                <artifactId>ProtocolLib</artifactId>
+                <version>4.7.0</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
-                <groupId>com.comphenix.packetwrapper</groupId>
-                <artifactId>PacketWrapper</artifactId>
-                <version>1.13-R0.1-SNAPSHOT</version>
+                <groupId>com.mojang</groupId>
+                <artifactId>authlib</artifactId>
+                <version>1.5.21</version>
             </dependency>
             <dependency>
-                <groupId>ru.progrm-jarvis.reflector</groupId>
-                <artifactId>reflector</artifactId>
-                <version>1.2.2</version>
+                <groupId>ru.progrm-jarvis.minecraft</groupId>
+                <artifactId>packet-wrapper</artifactId>
+                <version>1.16.4-SNAPSHOT</version>
             </dependency>
             <dependency>
-                <groupId>net.sf.trove4j</groupId>
-                <artifactId>trove4j</artifactId>
-                <version>3.0.3</version>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>2.11.0</version>
+            </dependency>
+            <dependency>
+                <groupId>it.unimi.dsi</groupId>
+                <artifactId>fastutil</artifactId>
+                <version>8.5.4</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>4.5.13</version>
             </dependency>
 
             <!-- Code generation and analysis -->
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
-                <version>1.18.4</version>
+                <version>1.18.20</version>
                 <scope>provided</scope>
+                <optional>true</optional>
             </dependency>
             <dependency>
-                <groupId>org.aspectj</groupId>
-                <artifactId>aspectjrt</artifactId>
-                <version>${aspectj.version}</version>
+                <groupId>org.jetbrains</groupId>
+                <artifactId>annotations</artifactId>
+                <version>21.0.1</version>
+                <scope>provided</scope>
+                <optional>true</optional>
             </dependency>
             <dependency>
                 <groupId>com.google.code.findbugs</groupId>
                 <artifactId>jsr305</artifactId>
                 <version>3.0.2</version>
+                <scope>provided</scope>
+                <optional>true</optional>
             </dependency>
 
             <!-- Test dependencies -->
@@ -302,6 +266,12 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-params</artifactId>
+                <version>${version.junit}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
                 <groupId>org.junit.platform</groupId>
                 <artifactId>junit-platform-launcher</artifactId>
                 <version>${version.junit.platform}</version>
@@ -314,59 +284,28 @@
                 <version>${version.junit.platform}</version>
                 <scope>test</scope>
             </dependency>
-
             <dependency>
                 <groupId>org.junit.platform</groupId>
                 <artifactId>junit-platform-surefire-provider</artifactId>
-                <version>1.2.0</version>
+                <version>1.3.2</version>
             </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
-                <version>2.23.0</version>
+                <version>${version.mockito}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-junit-jupiter</artifactId>
-                <version>2.23.0</version>
+                <version>${version.mockito}</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
 
     <profiles>
-        <profile>
-            <id>ossrh-deploy</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>sign</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
+        <!-- Deployment-related profiles -->
         <profile>
             <id>build-extras</id>
             <build>
@@ -399,30 +338,72 @@
             </build>
         </profile>
         <profile>
-            <id>unit-test</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <dependencies>
-                <!-- JUnit -->
-                <dependency>
-                    <groupId>org.junit.jupiter</groupId>
-                    <artifactId>junit-jupiter-engine</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>org.junit.platform</groupId>
-                    <artifactId>junit-platform-launcher</artifactId>
-                </dependency>
-                <!-- Mockito -->
-                <dependency>
-                    <groupId>org.mockito</groupId>
-                    <artifactId>mockito-core</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>org.mockito</groupId>
-                    <artifactId>mockito-junit-jupiter</artifactId>
-                </dependency>
-            </dependencies>
+            <id>sign-artifacts</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                                <configuration>
+                                    <gpgArguments>
+                                        <arg>--pinentry-mode</arg>
+                                        <arg>loopback</arg>
+                                    </gpgArguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- Repository profiles -->
+        <profile>
+            <id>sonatype-ossrh-deployment</id>
+            <distributionManagement>
+                <repository>
+                    <!-- This one is used for automatic sync with Maven Central -->
+                    <id>sonatype-ossrh</id>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
+                <snapshotRepository>
+                    <id>sonatype-ossrh</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+                </snapshotRepository>
+            </distributionManagement>
+        </profile>
+        <profile>
+            <id>github-package-registry-deployment</id>
+            <distributionManagement>
+                <repository>
+                    <id>github-package-registry</id>
+                    <url>https://maven.pkg.github.com/JarvisCraft/minecraft-utils</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+        <profile>
+            <id>automatic-central-release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>sonatype-ossrh</serverId>
+                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
 </project>

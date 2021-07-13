@@ -1,0 +1,25 @@
+version: 2
+updates:
+  - package-ecosystem: maven
+    directory: "/"
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 10
+    target-branch: development
+    reviewers:
+      - JarvisCraft
+    labels:
+      - dependencies
+      - automatic
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 10
+    target-branch: development
+    reviewers:
+      - JarvisCraft
+    labels:
+      - dependencies
+      - automatic

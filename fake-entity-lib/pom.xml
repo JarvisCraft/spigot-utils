@@ -3,28 +3,39 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>minecraft-utils</artifactId>
         <groupId>ru.progrm-jarvis.minecraft</groupId>
+        <artifactId>minecraft-utils</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
-    <artifactId>mc-unit</artifactId>
+    <artifactId>fake-entity-lib</artifactId>
 
-    <description>
-        Utilities useful for JUnit testing minecraft-related functionality
-    </description>
+    <packaging>jar</packaging>
 
     <dependencies>
+        <dependency>
+            <groupId>ru.progrm-jarvis.minecraft</groupId>
+            <artifactId>minecraft-commons</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
+            <groupId>com.comphenix.protocol</groupId>
+            <artifactId>ProtocolLib</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
+            <groupId>ru.progrm-jarvis.minecraft</groupId>
+            <artifactId>packet-wrapper</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ru.progrm-jarvis</groupId>
+            <artifactId>reflector</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>it.unimi.dsi</groupId>
+            <artifactId>fastutil</artifactId>
         </dependency>
 
         <dependency>
@@ -34,26 +45,21 @@
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
+            <version>21.0.1</version>
         </dependency>
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>jsr305</artifactId>
         </dependency>
 
+        <!-- Test -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-junit-jupiter</artifactId>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
